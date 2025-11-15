@@ -1,8 +1,17 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createMemoryHistory } from 'vue-router'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
+    history: createMemoryHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/',
+            component: () => import('../components/catalogo.vue')
+        },
+        {
+            path: '/panel',
+            component: () => import('../components/panel.vue')
+        },
+    ],
 })
 
 export default router

@@ -1,11 +1,19 @@
-<script setup></script>
+<script setup>
+    // Importa Header
+    import header_vue from './components/shared/header.vue';
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+    <header_vue />
+    <section id="content">
+        <router-view />
+    </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+    #content {
+        padding-top: 70px;
+        padding-left: 160px;
+        padding-right: 160px;
+    }
+</style>
