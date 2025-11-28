@@ -62,7 +62,7 @@
     import { ref } from 'vue';
     import { cargarProducto } from '@/services/catalogo-services';
     // Importa script para notificaciones SweetAlert2
-    import { alertSuccess } from '@/assets/js/notifications';
+    import alertas from '@/assets/js/notifications';
 
     const v_producto = defineModel('producto');
     const v_precio = defineModel('precio');
@@ -85,10 +85,10 @@
         cargarProducto(producto).then(
             (response) => {
                 if (response.error) {
-                    console.log('Error al cargar producto');
+                    alertas.alertError('Error al cargar producto');
                 } else {
                     enviando.value = false;
-                    alertSuccess('¡Producto agregado!');
+                    alertas.alertSuccess('¡Producto agregado!');
                 }
             }
         );

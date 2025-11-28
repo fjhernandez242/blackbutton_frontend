@@ -1,14 +1,18 @@
-<script setup>
-    // Importa Header
-    import header_vue from './components/shared/header.vue';
-</script>
-
 <template>
     <header_vue />
     <section id="content">
-        <router-view />
+        <catalogo_vue />
     </section>
 </template>
+
+<script setup>
+    // Importa Header
+    import header_vue from './components/shared/header.vue';
+    // Importar pantalla de catalogo
+    import catalogo_vue from './components/catalogo.vue';
+
+</script>
+
 
 <style scoped>
     #content {

@@ -12,4 +12,6 @@ export const URLS = {
     EDITAR_PRODUCTO: `${API_BASE_URL}/catalogo/editar`,
     // Url para eliminar un producto
     ELIMINAR_PRODUCTO: `${API_BASE_URL}/catalogo/eliminar`,
+    // Url para obtener producto por ID
+    PRODUCTO_ID: `${API_BASE_URL}/catalogo/productoId`,
 };
