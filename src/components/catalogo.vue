@@ -4,7 +4,8 @@
             <div class="card h-100" id="cardProducto">
                 <div class="card-header">
                     <img :src="rutaImagen(producto.imagen)" :alt="producto.producto"
-                        class="img-fluid producto-img" @click="acciones(producto.id)" :id="`img_${producto.id}`">
+                        class="img-fluid producto-img" @click="acciones(producto.id)" :id="`img_${producto.id}`"
+                        :class="{ 'desenfocarImagen': imagenDesenfocada }">
                     <div class="position-absolute acciones" :id="`accion_${producto.id}`" style="display: none;">
                         <div class="btn-goup-vertical" role="group">
                             <button type="button" id="btnVerProducto" class="btn" data-bs-toggle="tooltip"
@@ -49,7 +50,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue';
+    import { ref, onMounted } from 'vue';
     import { API_BASE_URL } from '@/config/api-urls';
     // Importa modal
     import modalProducto from './modalProducto.vue';
@@ -62,13 +63,15 @@
     const cartStore = useCartStore();
     const addTopCart = (params) => {
         cartStore.addItem(params);
+        // Ocultalos botones de acción al agregar a carrito
+        ocultaBotones();
     };
 
     const carrito = ref(false);
-    const mostrarAcciones = ref(false);
     // Info para edición
     const idProducto = ref(null);
     const mostrarModal = ref(false);
+    const imagenDesenfocada = ref(false);
     // Variable para almacenar productos
     const catalogo = ref([]);
     const listarProductos = async () => {
@@ -90,6 +93,8 @@
     const selecProducto = (id) => {
         idProducto.value = id;
         mostrarModal.value = true;
+        // Oculta los botones de acción
+        ocultaBotones();
     }
 
     function cerrarModal() {
@@ -98,18 +103,20 @@
     }
     // Función para el manejo de botones de acción
     function acciones(idProducto) {
-        mostrarAcciones.value = !mostrarAcciones.value;
-        const claseImagen = $('#img_' + idProducto);
-        if (claseImagen.hasClass('desenfocarImagen')) {
-            ocultaBotones(idProducto);
-        } else {
+        // Oculta los botones de acción de todas las tarjetas
+        ocultaBotones();
+        // const claseImagen = $('#img_' + idProducto);
+        if (!imagenDesenfocada.value) {
+            // Muestra los botones de acción solo de la tarjeta seleccionada
             muestraBotones(idProducto);
         }
     }
+
     // Acción para ocultar botones de acción
-    const ocultaBotones = (id) => {
-        $('#accion_' + id).hide();
-        $('#img_' + id).removeClass("desenfocarImagen");
+    const ocultaBotones = () => {
+
+        $('.acciones').hide();
+        $('.producto-img').removeClass("desenfocarImagen");
     }
     // Acción para mostrar botones de acción
     const muestraBotones = (id) => {

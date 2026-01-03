@@ -1,12 +1,12 @@
 <template>
-     <Transition name="fade-slide">
+    <Transition name="fade-slide">
         <div v-if="props.visible" class="modal" id="trabajoModal" tabindex="-1" aria-labelledby="trabajoModalLabel"
             style="display: block;" aria-modal="true" role="dialog">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="d-flex justify-content-end pb-2">
-                            <button type="button" class="btn-close" @click="handleClose()" aria-label="Close"></button>
+                            <button type="button" class="btn-close" @click="modalClose()" aria-label="Close"></button>
                         </div>
                         <div class="card h-100" id="cardinfo">
                             <div class="card-body">
@@ -35,7 +35,7 @@
                                         </table>
                                     </div>
                                     <div class="d-flex justify-content-end">
-                                       <button class="btn" @click="handleClose()" id="btnCerrar">
+                                       <button class="btn" @click="addProduct()" id="btnCerrar">
                                             <i class="bi bi-cart-plus"></i>
                                             Agregar a carrito
                                         </button>
@@ -54,11 +54,14 @@
     import { ref, watch } from 'vue';
     import { productoById } from '@/services/catalogo-services';
     import { API_BASE_URL } from '@/config/api-urls';
+    // props
+    import { useCartStore } from '@/store/cartStore';
 
     const v_imagen = defineModel('imagen');
     const v_producto = defineModel('producto');
     const v_precio = defineModel('precio');
     const v_dimensiones = defineModel('dimensiones');
+
 
     // Define emits
     const emit = defineEmits(['cerrar-modal']);
@@ -100,9 +103,24 @@
         },
         { immediate: true } // Ejecutar inmediatamente la primera vez
     );
+    const cartStore = useCartStore();
+    const addTopCart = () => {
+        const params = {
+            'producto': v_producto.value,
+            'precio': v_precio.value,
+            'dimensiones': v_dimensiones.value,
+            'imagen': v_imagen.value
+        }
+        cartStore.addItem(params);
+    };
 
     // Función para cerrar el modal y notificar al padre
-    function handleClose() {
+    function modalClose() {
+        cerrarmodal();
+        emit('cerrar-modal');
+    }
+    function addProduct() {
+        addTopCart();
         cerrarmodal();
         emit('cerrar-modal');
     }

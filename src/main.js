@@ -11,7 +11,7 @@ import '../node_modules/bootstrap-icons/font/bootstrap-icons.min.css';
 
 const app = createApp(App)
 
-const pinia = createPinia();
+export const pinia = createPinia();
 
 app.use(router)
 

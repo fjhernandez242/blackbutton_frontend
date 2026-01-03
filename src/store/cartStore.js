@@ -1,7 +1,7 @@
 // stores/cartStore.js
 
 import { defineStore } from 'pinia';
-import { productoById } from '@/services/catalogo-services';
+import { useNotificationStore } from './notificationStore';
 
 export const useCartStore = defineStore('cart', {
     // El 'state' es donde se guarda la información (el carrito en sí)
@@ -17,6 +17,8 @@ export const useCartStore = defineStore('cart', {
          * @param {Object} product - El producto a añadir (debe tener id, nombre, precio, etc.)
          */
         addItem(product) {
+
+            const notify = useNotificationStore();
             const existingItem = this.items.find(item => item.id === product.id);
 
             if (existingItem) {
@@ -29,10 +31,18 @@ export const useCartStore = defineStore('cart', {
                     quantity: 1,
                 });
             }
+            notify.lanzarAlerta(`Se añadio ${product.producto} al carrito`);
         },
         deleteItem(id) {
-            this.items = this.items.filter(item => item.id !== id);
-            console.log(`Producto con ID ${id} eliminado del carrito`);
+            const listadoItems = this.items.filter(item => item.id === id);
+
+            if (listadoItems[0].quantity > 1) {
+                listadoItems[0].quantity--;
+            } else {
+                this.items = this.items.filter(item => item.id !== id);
+            }
+
+
             return id;
         },
 
@@ -52,6 +62,22 @@ export const useCartStore = defineStore('cart', {
 
         loadedProducts: (state) => {
             return state.items;
+        },
+
+        /**
+         * Realiza la suma de todos los productos
+         */
+        totalPrecio: (state) => {
+            const totalCentimos = state.items.reduce((total, item) => {
+                // Obtiene el costo asignado al producto
+                const precio_relativo = parseFloat(item.precio);
+                // Realiza el calculo de precio con la cantidad de productos seleccionados
+                const precio_calculado = precio_relativo * item.quantity;
+
+                return total + (precio_calculado * 100);
+            }, 0);
+
+            return (totalCentimos / 100).toFixed(2);
         },
     },
 });
